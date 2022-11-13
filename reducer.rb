@@ -22,7 +22,7 @@ def deepcopy ast
     elsif ast.class == Application
         left_lambda_term = deepcopy(ast.children[0])
         right_lambda_term = deepcopy(ast.children[1])
-        new_ast = Abstraction.new left_lambda_term,right_lambda_term
+        new_ast = Application.new left_lambda_term,right_lambda_term
     end
     new_ast
 end
