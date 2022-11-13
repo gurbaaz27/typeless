@@ -32,9 +32,12 @@ def main
         exit
     end
 
-    printf "List of free variables :- "
+    printf "Free variables :- "
     begin
     free_variables_set = free_variable ast
+    if free_variables_set.length == 0
+        printf "none"
+    end
     free_variables_set.each { |e| printf "#{e} "}
     printf "\n"
     rescue Exception => err
@@ -53,41 +56,58 @@ def main
         exit
     end
 
-    puts "Please provide the free variable name along with its substitution. e.g. x:=M denotes replacing free occurences of x with lambda term M. Press ENTER to finish"
-    begin
-    while true
-        substitutions = STDIN.gets.chomp
-        if substitutions.empty?
-            break
-        end
-        fv_sub = substitutions.split(":=")
+    if free_variables_set.length != 0
+        puts "Please provide the free variable name along with its substitution. e.g. x:=M denotes replacing free occurences of x with lambda term M or press ENTER to finish"
+        begin
+        while true
+            substitutions = STDIN.gets.chomp
+            if substitutions.empty?
+                break
+            end
+            fv_sub = substitutions.split(":=")
 
-        if fv_sub.length != 2
+            if fv_sub.length != 2
+                puts "Please provide a valid free variable substitution of the form x:=M or press ENTER to finish"
+                next
+            end
+
+            fv = fv_sub[0] 
+            substitution = fv_sub[1] 
+
+            o = Parser.new substitution
+
+            sub_ast = o.parse
+
+            reducer.free_variable_substitution fv,sub_ast
+            
+            reducer.alpha_renaming
+            puts ast
+            
+            puts "Provide next free variable substitution substitution or press ENTER to finish"
+        end
+        rescue Exception => err
+            puts err
+            puts "Given expression M is not a valid lambda-term".red
             puts "Please provide a valid free variable substitution of the form x:=M or press ENTER to finish"
-            next
+            retry
         end
-
-        fv = fv_sub[0] 
-        substitution = fv_sub[1] 
-
-        o = Parser.new substitution
-
-        sub_ast = o.parse
-
-        reducer.free_variable_substitution fv,sub_ast
-
-        puts ast
-        
-        puts "Provide next substitution or press ENTER to finish"
-    end
-    rescue Exception => err
-        puts err
-        puts "Given expression M is not a valid lambda-term".red
-        puts "Please provide a valid free variable substitution of the form x:=M or press ENTER to finish"
-        retry
     end
 
-    reducer.beta_reduction
+    beta_reducer = BetaReducer.new
+
+    is_beta_reducible = true
+    reduced_ast = ast
+
+    puts "Beta Reduction :- "
+
+    while is_beta_reducible
+        reduced_ast = beta_reducer.reduction reduced_ast
+        is_beta_reducible = beta_reducer.is_beta_reducible
+        puts reduced_ast
+    end
+
+    puts "Final Beta Reduced Form :- ".green
+    puts reduced_ast.to_s.green
 end
 
 main

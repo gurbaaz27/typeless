@@ -32,6 +32,7 @@ class Reducer
         @counter=0
         @hashmap=Hash[]
         @ast=ast
+        @reduced=false
     end
 
     def save_hashmap ast
@@ -99,7 +100,47 @@ class Reducer
         end
     end
 
-    def beta_reduction ast=@ast
-        
+end
+
+
+class BetaReducer 
+    def initialize
+        @reduced=false
+    end
+
+    def is_beta_reducible
+        @reduced
+    end
+
+    def evaluate param, body, replacement
+        if body.class == Variable
+            if body.to_s == param.to_s
+                deepcopy replacement
+            end
+        elsif body.class == Abstraction
+            ## TODO
+        elsif body.class == Application
+            Application.new (evaluate param,body.children[0],replacement), (evaluate param,body.children[1],replacement)
+        end 
+    end
+
+    def reduction_helper ast
+        if ast.class == Variable
+            Variable.new ast.to_s
+        elsif ast.class == Abstraction
+            Abstraction.new ast.children[0], (reduction_helper ast.children[1])
+        elsif ast.class == Application
+            if ast.children[0].class == Abstraction and not @reduced
+                @reduction=true
+                evaluate ast.children[0].children[0], ast.children[0].children[1], ast.children[1]
+            else
+                Application.new (reduction_helper ast.children[0]), (reduction_helper ast.children[1])
+            end
+        end
+    end
+
+    def reduction ast
+        @reduced=false
+        reduction_helper ast
     end
 end
