@@ -46,7 +46,7 @@ def main
 
     printf "Alpha Renaming :- "
     begin
-    ar = reducer.alpha_renaming
+    reducer.alpha_renaming
     puts ast
     rescue Exception => err
         puts err
@@ -86,6 +86,8 @@ def main
         puts "Please provide a valid free variable substitution of the form x:=M or press ENTER to finish"
         retry
     end
+
+    reducer.beta_reduction
 end
 
 main

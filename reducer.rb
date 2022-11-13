@@ -98,4 +98,8 @@ class Reducer
             end
         end
     end
+
+    def beta_reduction ast=@ast
+        
+    end
 end
