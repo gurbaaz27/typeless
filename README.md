@@ -16,12 +16,29 @@ Supports the following features:
 - [x] Free variables substitution
 - [x] Alpha Renaming and Beta Reduction
 
+### Code Structure
+
+```bash
+.
+├── assets/
+├── lexer.rb
+├── LICENSE
+├── main.rb
+├── parser.rb
+├── README.md
+├── reducer.rb
+├── tests/
+└── utils.rb
+
+2 directories, 14 files
+```
+
 ## Usage
 
 Keep your lambda expression in a file and pass its filepath as argument to `compiler.rb`.
 
 ```bash
-ruby compiler.rb <lambda-expression-input-file-path>
+ruby main.rb <lambda-expression-input-file-path>
 ```
 
 You may find some of the lambda expression files in `tests/` directory.
