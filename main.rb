@@ -111,8 +111,10 @@ def main
     while is_beta_reducible
         reduced_ast = beta_reducer.reduction reduced_ast
         is_beta_reducible = beta_reducer.is_beta_reducible
-        puts "Step #{i}. #{reduced_ast}"
-        i += 1
+        if is_beta_reducible
+            puts "Step #{i}. #{reduced_ast}"
+            i += 1
+        end
     end
 
     puts "No further reduction is possible!".green

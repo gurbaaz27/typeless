@@ -149,7 +149,7 @@ class BetaReducer
             Abstraction.new ast.children[0], (reduction_helper ast.children[1])
         elsif ast.class == Application
             if ast.children[0].class == Abstraction and not @reduced
-                @reduction=true
+                @reduced=true
                 evaluate ast.children[0].children[0], ast.children[0].children[1], ast.children[1]
             else
                 Application.new (reduction_helper ast.children[0]), (reduction_helper ast.children[1])
