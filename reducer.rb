@@ -35,6 +35,14 @@ class Reducer
         @reduced=false
     end
 
+    def advance_counter
+        @counter += 1
+    end
+
+    def get_counter
+        @counter
+    end
+
     def save_hashmap ast
         prev_val = ""
         had = false
@@ -60,7 +68,7 @@ class Reducer
             new_label = "v"+@counter.to_s
             @hashmap[ast.children[0].to_s] = new_label
             ast.children[0].set new_label
-            @counter += 1
+            advance_counter
             alpha_renaming ast.children[1]
             restore_hashmap prev_val,had,ast
         elsif ast.class == Application
@@ -104,7 +112,8 @@ end
 
 
 class BetaReducer 
-    def initialize
+    def initialize counter 
+        @counter=counter
         @reduced=false
     end
 
@@ -116,9 +125,18 @@ class BetaReducer
         if body.class == Variable
             if body.to_s == param.to_s
                 deepcopy replacement
+            else
+                Variable.new body.to_s
             end
         elsif body.class == Abstraction
-            ## TODO
+            if free_variable(replacement).include? body.children[0].to_s
+                new_label = "v"+@counter.to_s
+                @counter += 1
+                new_param = Variable.new new_label
+                Abstraction.new new_param, (evaluate body.children[0], body.children[1], new_param)
+            else 
+                Abstraction.new body.children[0], (evaluate param,body.children[1],replacement)
+            end
         elsif body.class == Application
             Application.new (evaluate param,body.children[0],replacement), (evaluate param,body.children[1],replacement)
         end 

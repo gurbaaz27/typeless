@@ -82,7 +82,14 @@ def main
             
             reducer.alpha_renaming
             puts ast
-            
+
+            free_variables_set = free_variable ast
+
+            if free_variables_set.length != 0
+                puts "All free variables have been substituted successfully!".green
+                break
+            end
+
             puts "Provide next free variable substitution substitution or press ENTER to finish"
         end
         rescue Exception => err
@@ -93,19 +100,22 @@ def main
         end
     end
 
-    beta_reducer = BetaReducer.new
+    beta_reducer = BetaReducer.new reducer.get_counter
 
     is_beta_reducible = true
     reduced_ast = ast
+    i = 1
 
     puts "Beta Reduction :- "
 
     while is_beta_reducible
         reduced_ast = beta_reducer.reduction reduced_ast
         is_beta_reducible = beta_reducer.is_beta_reducible
-        puts reduced_ast
+        puts "Step #{i}. #{reduced_ast}"
+        i += 1
     end
 
+    puts "No further reduction is possible!".green
     puts "Final Beta Reduced Form :- ".green
     puts reduced_ast.to_s.green
 end
