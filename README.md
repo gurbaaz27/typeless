@@ -1,4 +1,5 @@
 # CS350A Course Project
+## λ-calculus interpreter
 
 ### Table of Contents
 
@@ -8,9 +9,18 @@
 
 ## Description
 
-Implementation language: `ruby`
+An interpreter for λ-calculus implemented in `ruby`, as part of our course project CS350A: Principles of Programming Languages under Prof. Satyadev Nandakumar, in Fall Semester 2022-23, IIT Kanpur.
 
-Supports the following features:
+The grammar specification is:
+```
+λ − term ::= variable |
+            (\variable · λ − term) |
+            [λ − term][λ − term]
+
+The allowed variables are single lowercase English letters - a, b, c etc.
+```
+
+It supports the following features:
 - [x] Lexer and grammar checker for lambda term expression using LL(1) parser
 - [x] Determine free variables in given lambda term
 - [x] Free variables substitution
@@ -35,10 +45,30 @@ Supports the following features:
 
 ## Usage
 
-Keep your lambda expression in a file and pass its filepath as argument to `compiler.rb`.
+Keep your λ-expression in a file and pass its filepath as an argument to `main.rb`.
 
 ```bash
-ruby main.rb <lambda-expression-input-file-path>
+Lambda Calculus Interpreter
+===========================
+Usage: main.rb [options]
+    -i, --input FILE                 Input file containing λ-expression
+    -o, --output FILE                (Optional) Output file to store reduced λ-expression. Default: out.txt
+```
+
+### Demo Example
+
+```bash
+$ ruby main.rb -i tests/8.lc ## or
+$ ruby main.rb --input=tests/8.lc
+
+[ ( \ x . ( \ x . x ) ) ] [ ( \ x . x ) ] is a valid lambda term
+Free variables :- none
+Alpha Renaming :- [ ( \ v0 . ( \ v1 . v1 ) ) ] [ ( \ v2 . v2 ) ]
+Beta Reduction :- 
+Step 1. ( \ v1 . v1 )
+No further reduction is possible!
+Final Beta Reduced Form :- 
+( \ v1 . v1 )
 ```
 
 You may find some of the lambda expression files in `tests/` directory.
