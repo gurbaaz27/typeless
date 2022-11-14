@@ -100,8 +100,15 @@ def main
                 next
             end
 
-            fv = fv_sub[0] 
-            substitution = fv_sub[1] 
+            fv = fv_sub[0].delete(Token::WHITESPACE)
+            substitution = fv_sub[1].delete(Token::WHITESPACE) 
+            
+            if not free_variable(ast).include? fv
+                puts "> #{fv} is not a free variable in given lambda-term #{ast}".yellow
+                puts "> Please provide a valid free variable substitution of the form x:=M"
+                puts "> or press ENTER to finish"
+                next
+            end
 
             o = Parser.new substitution
 
