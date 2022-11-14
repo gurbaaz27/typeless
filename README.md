@@ -58,17 +58,35 @@ Usage: main.rb [options]
 ### Demo Example
 
 ```bash
-$ ruby main.rb -i tests/8.lc ## or
-$ ruby main.rb --input=tests/8.lc
+$ ruby main.rb -i tests/9.lc ## or
+$ ruby main.rb --input=tests/9.lc
 
-[ ( \ x . ( \ x . x ) ) ] [ ( \ x . x ) ] is a valid lambda term
-Free variables :- none
-α-renaming :- [ ( \ v0 . ( \ v1 . v1 ) ) ] [ ( \ v2 . v2 ) ]
+================
+Course Project
+Lambda Calculus Interpreter
+Created by: Ayush, Gurbaaz and Kritin
+================
+Grammar checker :- 
+[ ( \ x . x ) ] [ y ] is a valid lambda term
+================
+Free variables :- y 
+================
+α-renaming :- [ ( \ v0 . v0 ) ] [ y ]
+================
+> Please provide the free variable name along with its substitution. e.g. x:=M denotes replacing free occurences of x with lambda term M
+> or press ENTER to finish
+y:=(\x.x)
+Free variable substitution :- [ ( \ v1 . v1 ) ] [ ( \ v2 . v2 ) ]
+================
+> All free variables have been substituted successfully! (Closed Form)
+Exiting...
+================
 β-reduction :- 
-Step 1. ( \ v1 . v1 )
+Step 1. ( \ v2 . v2 )
 No further reduction possible!
-Final β-reduced form saved to out.txt:- 
-( \ v1 . v1 )
+================
+Final β-reduced form '( \ v2 . v2 )' saved to 'out.txt'
+================
 ```
 
 You may find some of the lambda expression files in `tests/` directory.

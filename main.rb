@@ -36,6 +36,14 @@ def main
 
     parser = Parser.new code
 
+    puts "================"
+    puts "Course Project".green
+    puts "Lambda Calculus Interpreter".yellow
+    puts "Created by: Ayush, Gurbaaz and Kritin".yellow
+
+    puts "================"
+    puts "Grammar checker :- "
+
     begin
     ast = parser.parse
     if code.length != parser.get_counter
@@ -48,6 +56,7 @@ def main
         exit
     end
 
+    puts "================"
     printf "Free variables :- "
     begin
     free_variables_set = free_variable ast
@@ -63,17 +72,20 @@ def main
 
     reducer = Reducer.new ast
 
-    printf "α-renaming :- "
+    puts "================"
+    printf "α-renaming :- ".green
     begin
     reducer.alpha_renaming
-    puts ast
+    puts ast.to_s.green
     rescue Exception => err
         puts err
         exit
     end
 
+    puts "================"
     if free_variables_set.length != 0
-        puts "Please provide the free variable name along with its substitution. e.g. x:=M denotes replacing free occurences of x with lambda term M or press ENTER to finish"
+        puts "> Please provide the free variable name along with its substitution. e.g. x:=M denotes replacing free occurences of x with lambda term M"
+        puts "> or press ENTER to finish"
         begin
         while true
             substitutions = STDIN.gets.chomp
@@ -83,7 +95,8 @@ def main
             fv_sub = substitutions.split(":=")
 
             if fv_sub.length != 2
-                puts "Please provide a valid free variable substitution of the form x:=M or press ENTER to finish"
+                puts "> Please provide a valid free variable substitution of the form x:=M"
+                puts "> or press ENTER to finish"
                 next
             end
 
@@ -94,28 +107,40 @@ def main
 
             sub_ast = o.parse
 
-            reducer.free_variable_substitution fv,sub_ast
-            puts ast
-            
+            if ast.class == Variable
+                if ast.to_s == fv
+                    ast = deepcopy sub_ast
+                    reducer.set_ast ast
+                end 
+            else
+                reducer.free_variable_substitution fv,sub_ast
+            end
+
             reducer.alpha_renaming
-            puts ast
+            printf "Free variable substitution :- "
+            puts ast.to_s.green
 
             free_variables_set = free_variable ast
 
-            if free_variables_set.length != 0
-                puts "All free variables have been substituted successfully!".green
+            if free_variables_set.length == 0
+                puts "================"
+                puts "> All free variables have been substituted successfully! (Closed Form)".green
                 break
             end
 
-            puts "Provide next free variable substitution substitution or press ENTER to finish"
+            puts "> Provide next free variable substitution substitution"
+            puts "> or press ENTER to finish"
         end
         rescue Exception => err
             puts err
             puts "Given expression M is not a valid lambda-term".red
-            puts "Please provide a valid free variable substitution of the form x:=M or press ENTER to finish"
+            puts "> Please provide a valid free variable substitution of the form x:=M"
+            puts "> or press ENTER to finish"
             retry
         end
     end
+
+    puts "Exiting...".yellow
 
     beta_reducer = BetaReducer.new reducer.get_counter
 
@@ -123,20 +148,27 @@ def main
     reduced_ast = ast
     i = 1
 
-    puts "β-reduction :- "
+    puts "================"
+    puts "β-reduction :- ".green
 
     while is_beta_reducible
+        prev_reduced_state = reduced_ast
         reduced_ast = beta_reducer.reduction reduced_ast
         is_beta_reducible = beta_reducer.is_beta_reducible
         if is_beta_reducible
             puts "Step #{i}. #{reduced_ast}"
             i += 1
+            if reduced_ast.to_s == prev_reduced_state.to_s 
+                puts "This lambda-term is reducible infinite number of times (quine)".yellow
+                break
+            end
         end
     end
 
-    puts "No further reduction possible!".green
-    puts "Final β-reduced form saved to #{options[:output]}:- ".green
-    puts reduced_ast.to_s.green
+    puts "No further reduction possible!".yellow
+    puts "================"
+    puts "Final β-reduced form '#{reduced_ast.to_s}' saved to '#{options[:output]}'".green
+    puts "================"
 
     File.open(options[:output], "w") { |file| file.write(reduced_ast.to_s) }
 end

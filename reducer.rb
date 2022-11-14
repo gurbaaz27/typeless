@@ -43,6 +43,10 @@ class Reducer
         @counter
     end
 
+    def set_ast ast
+        @ast=ast
+    end
+
     def save_hashmap ast
         prev_val = ""
         had = false
@@ -67,10 +71,10 @@ class Reducer
             prev_val, had = save_hashmap ast
             new_label = "v"+@counter.to_s
             @hashmap[ast.children[0].to_s] = new_label
-            ast.children[0].set new_label
             advance_counter
             alpha_renaming ast.children[1]
             restore_hashmap prev_val,had,ast
+            ast.children[0].set new_label
         elsif ast.class == Application
             alpha_renaming ast.children[0]
             alpha_renaming ast.children[1]
@@ -107,9 +111,7 @@ class Reducer
             end
         end
     end
-
 end
-
 
 class BetaReducer 
     def initialize counter 
