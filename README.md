@@ -63,11 +63,11 @@ $ ruby main.rb --input=tests/8.lc
 
 [ ( \ x . ( \ x . x ) ) ] [ ( \ x . x ) ] is a valid lambda term
 Free variables :- none
-Alpha Renaming :- [ ( \ v0 . ( \ v1 . v1 ) ) ] [ ( \ v2 . v2 ) ]
-Beta Reduction :- 
+α-renaming :- [ ( \ v0 . ( \ v1 . v1 ) ) ] [ ( \ v2 . v2 ) ]
+β-reduction :- 
 Step 1. ( \ v1 . v1 )
-No further reduction is possible!
-Final Beta Reduced Form :- 
+No further reduction possible!
+Final β-reduced form saved to out.txt:- 
 ( \ v1 . v1 )
 ```
 

@@ -76,7 +76,7 @@ class Parser
     end
 
     def error expected, found
-        raise "Parser Error: Expected #{expected}, found '#{found}' at position #{@counter+1} (1-indexed)"
+        raise "ParserError: Expected #{expected}, found '#{found}' at position #{@counter+1} (1-indexed)"
     end
 
     def current_char

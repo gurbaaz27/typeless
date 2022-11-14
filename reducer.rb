@@ -8,7 +8,7 @@ def free_variable ast
     elsif ast.class == Application
         return (free_variable ast.children[0]) + (free_variable ast.children[1])
     else
-        raise "Free variables error: Unknown node type encountered in AST"
+        raise "FreeVariableError: Unknown node type encountered in AST"
     end
 end
 

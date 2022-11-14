@@ -1,22 +1,38 @@
 require "set"
+require "optparse"
 require_relative "parser"
 require_relative "reducer"
 require_relative "utils"
 
 def main
-    if ARGV.length != 1
-        puts "Too few arguments, path of input file needed"
-        exit
+    options = {}
+    optparse = OptionParser.new do |opts|
+        opts.banner = "Lambda Calculus Interpreter\n"\
+                      "===========================\n" \
+                      "Usage: main.rb [options]" \
+
+        opts.on('-i', '--input FILE', 'Input file containing λ-expression') { |o| options[:input] = o }
+        opts.on('-o', '--output FILE', '(Optional) Output file to store reduced λ-expression. Default: out.txt') { |o| options[:output] = o }
+
+        options[:help] = opts.help
+    end.parse!
+
+    if options[:input].nil?
+        abort(options[:help])
     end
 
-    filename = ARGV[0]
+    if options[:output].nil?
+        options[:output] = "out.txt"
+    end
+
+    filename = options[:input]
 
     if not File.file?(filename)
-        puts "File Not Found Error: No such file exists - #{filename}".red
+        puts "FileNotFoundError: No such file exists - #{filename}".red
         exit
     end
 
-    code = File.open(filename).map(&:chomp).join(" ").delete(" ")
+    code = File.open(filename).map(&:chomp).join().delete(Token::WHITESPACE)
 
     parser = Parser.new code
 
@@ -28,7 +44,7 @@ def main
     puts "#{ast} is a valid lambda term".green
     rescue Exception => err
         puts err
-        puts "Nope, given expression is not a valid lambda-term".red
+        puts "Nope, given expression #{code} is not a valid lambda-term".red
         exit
     end
 
@@ -47,7 +63,7 @@ def main
 
     reducer = Reducer.new ast
 
-    printf "Alpha Renaming :- "
+    printf "α-renaming :- "
     begin
     reducer.alpha_renaming
     puts ast
@@ -79,6 +95,7 @@ def main
             sub_ast = o.parse
 
             reducer.free_variable_substitution fv,sub_ast
+            puts ast
             
             reducer.alpha_renaming
             puts ast
@@ -106,7 +123,7 @@ def main
     reduced_ast = ast
     i = 1
 
-    puts "Beta Reduction :- "
+    puts "β-reduction :- "
 
     while is_beta_reducible
         reduced_ast = beta_reducer.reduction reduced_ast
@@ -117,9 +134,11 @@ def main
         end
     end
 
-    puts "No further reduction is possible!".green
-    puts "Final Beta Reduced Form :- ".green
+    puts "No further reduction possible!".green
+    puts "Final β-reduced form saved to #{options[:output]}:- ".green
     puts reduced_ast.to_s.green
+
+    File.open(options[:output], "w") { |file| file.write(reduced_ast.to_s) }
 end
 
 main
