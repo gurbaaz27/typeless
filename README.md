@@ -57,6 +57,8 @@ Usage: main.rb [options]
 
 ### Demo Example
 
+![](assets/demo.gif)
+
 ```bash
 $ ruby main.rb -i tests/9.lc ## or
 $ ruby main.rb --input=tests/9.lc
