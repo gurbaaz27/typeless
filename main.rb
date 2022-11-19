@@ -114,7 +114,7 @@ def main
 
             sub_ast = o.parse
 
-            if ast.class == Variable
+            if ast.instance_of? Variable
                 if ast.to_s == fv
                     ast = deepcopy sub_ast
                     reducer.set_ast ast

@@ -1,11 +1,11 @@
 require_relative "parser"
 
 def free_variable ast
-    if ast.class == Variable
+    if ast.instance_of? Variable
         return Set[ast.to_s]
-    elsif ast.class == Abstraction
+    elsif ast.instance_of? Abstraction
         return (free_variable ast.children[1]) - (free_variable ast.children[0])
-    elsif ast.class == Application
+    elsif ast.instance_of? Application
         return (free_variable ast.children[0]) + (free_variable ast.children[1])
     else
         raise "FreeVariableError: Unknown node type encountered in AST"
@@ -13,13 +13,13 @@ def free_variable ast
 end
 
 def deepcopy ast
-    if ast.class == Variable
+    if ast.instance_of? Variable
         new_ast = Variable.new ast.to_s
-    elsif ast.class == Abstraction
+    elsif ast.instance_of? Abstraction
         param = deepcopy(ast.children[0])
         lambda_term = deepcopy(ast.children[1])
         new_ast = Abstraction.new param,lambda_term
-    elsif ast.class == Application
+    elsif ast.instance_of? Application
         left_lambda_term = deepcopy(ast.children[0])
         right_lambda_term = deepcopy(ast.children[1])
         new_ast = Application.new left_lambda_term,right_lambda_term
@@ -67,7 +67,7 @@ class Reducer
     end
 
     def alpha_renaming ast=@ast
-        if ast.class == Abstraction
+        if ast.instance_of? Abstraction
             prev_val, had = save_hashmap ast
             new_label = "v"+@counter.to_s
             @hashmap[ast.children[0].to_s] = new_label
@@ -75,10 +75,10 @@ class Reducer
             alpha_renaming ast.children[1]
             restore_hashmap prev_val,had,ast
             ast.children[0].set new_label
-        elsif ast.class == Application
+        elsif ast.instance_of? Application
             alpha_renaming ast.children[0]
             alpha_renaming ast.children[1]
-        elsif ast.class == Variable
+        elsif ast.instance_of? Variable
             if @hashmap.has_key? ast.to_s 
                 ast.set @hashmap[ast.to_s]
             end
@@ -88,23 +88,23 @@ class Reducer
     end
 
     def free_variable_substitution fv,sub_ast,ast=@ast
-        if ast.class == Abstraction
+        if ast.instance_of? Abstraction
             lambda_term = ast.children[1]
-            if lambda_term.class == Variable and lambda_term.to_s == fv
+            if lambda_term.instance_of? Variable and lambda_term.to_s == fv
                 ast.set_lambda_term deepcopy sub_ast
             else
                 free_variable_substitution fv,sub_ast,ast.children[1]
             end 
-        elsif ast.class == Application
+        elsif ast.instance_of? Application
             lambda_term = ast.children[0]
-            if lambda_term.class == Variable and lambda_term.to_s == fv
+            if lambda_term.instance_of? Variable and lambda_term.to_s == fv
                 ast.set_left_lambda_term deepcopy sub_ast
             else
                 free_variable_substitution fv,sub_ast,ast.children[0]
             end
 
             lambda_term = ast.children[1]
-            if lambda_term.class == Variable and lambda_term.to_s == fv
+            if lambda_term.instance_of? Variable and lambda_term.to_s == fv
                 ast.set_right_lambda_term deepcopy sub_ast
             else
                 free_variable_substitution fv,sub_ast,ast.children[1]
@@ -124,13 +124,13 @@ class BetaReducer
     end
 
     def evaluate param, body, replacement
-        if body.class == Variable
+        if body.instance_of? Variable
             if body.to_s == param.to_s
                 deepcopy replacement
             else
                 Variable.new body.to_s
             end
-        elsif body.class == Abstraction
+        elsif body.instance_of? Abstraction
             if free_variable(replacement).include? body.children[0].to_s
                 new_label = "v"+@counter.to_s
                 @counter += 1
@@ -139,18 +139,18 @@ class BetaReducer
             else 
                 Abstraction.new body.children[0], (evaluate param,body.children[1],replacement)
             end
-        elsif body.class == Application
+        elsif body.instance_of? Application
             Application.new (evaluate param,body.children[0],replacement), (evaluate param,body.children[1],replacement)
         end 
     end
 
     def reduction_helper ast
-        if ast.class == Variable
+        if ast.instance_of? Variable
             Variable.new ast.to_s
-        elsif ast.class == Abstraction
+        elsif ast.instance_of? Abstraction
             Abstraction.new ast.children[0], (reduction_helper ast.children[1])
-        elsif ast.class == Application
-            if ast.children[0].class == Abstraction and not @reduced
+        elsif ast.instance_of? Application
+            if ast.children[0].instance_of? Abstraction and not @reduced
                 @reduced=true
                 evaluate ast.children[0].children[0], ast.children[0].children[1], ast.children[1]
             else
