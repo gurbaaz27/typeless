@@ -4,7 +4,12 @@
 ### Table of Contents
 
 - [Description](#description)
+  - [Features](#features)
+  - [Code Structure](#code-structure)
+
 - [Usage](#usage)
+  - [Demo Example](#demo-example)
+
 - [Team Members](#team-members)
 
 ## Description
@@ -20,7 +25,10 @@ The grammar specification is:
 The allowed variables are single lowercase English letters - a, b, c etc.
 ```
 
+### Features
+
 It supports the following features:
+
 - [x] Lexer and grammar checker for lambda term expression using LL(1) parser
 - [x] Determine free variables in given lambda term
 - [x] Free variables substitution
@@ -56,6 +64,8 @@ Usage: main.rb [options]
 ```
 
 ### Demo Example
+
+**Note** that we use the notation of `v{i}`, where `i := [1,2,3,...]` for our bound variables after the processing of alpha-renaming and beta-reduction. This helps in easily identifying the bound variables and keep their count in the final reduced form.
 
 ![](assets/demo.gif)
 
