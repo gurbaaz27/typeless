@@ -1,4 +1,4 @@
-# CS350A Course Project
+# Typeless 
 ## λ-calculus interpreter
 
 ### Table of Contents
