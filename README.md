@@ -107,7 +107,7 @@ You may find some of the lambda expression files in `tests/` directory.
 
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/antreev-brar"><img src="https://github.com/kumayu0108.png" width="100px;" alt=""/><br /><sub><b><i>Ayush Kumar</i></b></sub></a></td>
+    <td align="center"><a href="https://github.com/kumayu0108"><img src="https://github.com/kumayu0108.png" width="100px;" alt=""/><br /><sub><b><i>Ayush Kumar</i></b></sub></a></td>
    <td align="center"><a href="https://github.com/gurbaaz27"><img src="https://github.com/gurbaaz27.png" width="100px;" alt=""/><br /><sub><b><i>Gurbaaz Singh Nandra</i></b></sub></a></td>
     <td align="center"><a href="https://github.com/kritinsharma"><img src=""https://github.com/kritinsharma.png"" width="100px;" alt=""/><br /><sub><b><i>Kritin Sharma</i></b></sub></a></td>
   </tr>
