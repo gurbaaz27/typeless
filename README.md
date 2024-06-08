@@ -112,3 +112,7 @@ You may find some of the lambda expression files in `tests/` directory.
     <td align="center"><a href="https://github.com/kritinsharma"><img src=""https://github.com/kritinsharma.png"" width="100px;" alt=""/><br /><sub><b><i>Kritin Sharma</i></b></sub></a></td>
   </tr>
 </table>
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=gurbaaz27/typeless&type=Date)](https://star-history.com/#gurbaaz27/typeless&Date)
